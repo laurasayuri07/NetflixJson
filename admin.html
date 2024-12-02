@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administração</title>
+  <link rel="stylesheet" href="adm.css">
+</head>
+<body>
+  <h1>Página de Administração</h1>
+  
+
+  <button onclick="voltarParaLogin()">Sair</button>
+
+  <h2>Buscar Usuário por RG</h2>
+  <div>
+    <input type="text" id="search-rg" placeholder="Digite o RG">
+    <button id="search-btn">Buscar</button>
+  </div>
+  
+
+  <h2>Lista de Usuários</h2>
+  <ul id="user-list">
+  </ul>
+
+  <div id="edit-form-container" style="display: none;">
+    <h2>Editar Usuário</h2>
+    <form id="edit-form">
+      <input type="text" id="edit-nome" placeholder="Nome" required><br>
+      <input type="text" id="edit-sobrenome" placeholder="Sobrenome" required><br>
+      <input type="text" id="edit-rg" placeholder="RG" required><br>
+      <input type="email" id="edit-email" placeholder="Email" required><br>
+      <input type="password" id="edit-senha" placeholder="Senha" required><br>
+      <button type="submit">Salvar</button>
+      <button type="button" onclick="cancelarEdicao()">Cancelar</button>
+    </form>
+  </div>
+
+  <script>
+    function voltarParaLogin() {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('nome');
+      localStorage.removeItem('sobrenome');
+      localStorage.removeItem('isAdmin');
+
+      window.location.href = 'index.html';
+    }
+
+    let authToken = localStorage.getItem('authToken');
+    let isAdmin = localStorage.getItem('isAdmin');
+
+    if (!authToken || isAdmin !== 'true') {
+      window.location.href = 'index.html';
+    }
+
+    async function carregarUsuarios() {
+      const response = await fetch("http://localhost:3000/usuarios");
+      const usuarios = await response.json();
+
+      const userList = document.getElementById("user-list");
+      userList.innerHTML = usuarios.map(user => `
+        <li>
+          ${user.nome} ${user.sobrenome} (${user.rg}) 
+          - <button onclick="editarUsuario('${user.id}')">Editar</button>
+        </li>
+      `).join('');
+    }
+
+    document.getElementById("search-btn").addEventListener("click", async function() {
+      const rg = document.getElementById("search-rg").value;
+      const response = await fetch("http://localhost:3000/usuarios");
+      const usuarios = await response.json();
+
+      const filteredUsers = usuarios.filter(u => u.rg.includes(rg));
+      const userList = document.getElementById("user-list");
+
+      userList.innerHTML = filteredUsers.map(user => `
+        <li>
+          ${user.nome} ${user.sobrenome} (${user.rg}) 
+          - <button onclick="editarUsuario('${user.id}')">Editar</button>
+        </li>
+      `).join('');
+    });
+
+    async function editarUsuario(userId) {
+      const response = await fetch(`http://localhost:3000/usuarios/${userId}`);
+      const user = await response.json();
+
+      document.getElementById("edit-nome").value = user.nome;
+      document.getElementById("edit-sobrenome").value = user.sobrenome;
+      document.getElementById("edit-rg").value = user.rg;
+      document.getElementById("edit-email").value = user.email;
+      document.getElementById("edit-senha").value = user.senha;
+
+      document.getElementById("edit-form-container").style.display = "block";
+      document.getElementById("edit-form").onsubmit = function(event) {
+        event.preventDefault(); 
+
+        const updatedUser = {
+          nome: document.getElementById("edit-nome").value,
+          sobrenome: document.getElementById("edit-sobrenome").value,
+          rg: document.getElementById("edit-rg").value,
+          email: document.getElementById("edit-email").value,
+          senha: document.getElementById("edit-senha").value,
+        };
+
+        atualizarUsuario(userId, updatedUser);
+      };
+    }
+
+    async function atualizarUsuario(userId, updatedUser) {
+      const response = await fetch(`http://localhost:3000/usuarios/${userId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedUser),
+      });
+
+      if (response.ok) {
+        alert("Usuário atualizado com sucesso!");
+        carregarUsuarios(); 
+        cancelarEdicao(); 
+      } else {
+        alert("Erro ao atualizar o usuário.");
+      }
+    }
+
+    function cancelarEdicao() {
+      document.getElementById("edit-form-container").style.display = "none";
+    }
+
+    document.addEventListener("DOMContentLoaded", carregarUsuarios);
+  </script>
+</body>
+</html>

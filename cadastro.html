@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Netflix</title>
+  <link rel="stylesheet" href="cadastro.css">
+</head>
+<body>
+
+  <div class="container">
+   <h1 class="">Netflix</h1>
+    <header>
+        <a href="index.html">Login</a>
+        <a href="cadastro.html">Cadastro</a>
+    </header>
+    <div class="title">Cadastra-se</div>
+  </div>
+
+
+  
+
+
+  <div class="form-container">
+    <form id="register-form">
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" placeholder="Nome" required>
+      <label for="sobrenome">Sobrenome:</label>
+      <input type="text" id="sobrenome" placeholder="Sobrenome" required>
+      <label for="username">RG:</label>
+      <input type="text" id="rg" placeholder="RG" required>
+      <label for="username">Email:</label>
+      <input type="email" id="email" placeholder="Email" required>
+      <label for="senha">Senha:</label>
+      <input type="password" id="senha" placeholder="Senha" required>
+      <button type="submit">Cadastrar</button>
+    </form>
+    <a href="index.html">Já tem uma conta? Faça login</a>
+  </div>
+
+
+  <script>
+   
+      const apiUrl = "http://localhost:3000/usuarios";
+  
+      document.getElementById("register-form")?.addEventListener("submit", async (event) => {
+        event.preventDefault();
+  
+        const nome = document.getElementById("nome").value;
+        const sobrenome = document.getElementById("sobrenome").value;
+        const rg = document.getElementById("rg").value;
+        const email = document.getElementById("email").value;
+        const senha = document.getElementById("senha").value;
+  
+        const newUser = {
+          nome,
+          sobrenome,
+          rg,
+          email,
+          senha,
+          isAdmin: false,
+        };
+  
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newUser),
+        });
+  
+        if (response.ok) {
+          alert("Usuário cadastrado com sucesso!");
+          window.location.href = "index.html"; 
+        } else {
+          alert("Erro ao cadastrar. Tente novamente.");
+        }
+      });
+    </script>
+  
+  
+  
+
+</body>
+</html>

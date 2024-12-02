@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boas Vindas</title>
+  <link rel="stylesheet" href="boas.css">
+</head>
+<body>
+  <fieldset>
+    <legend>Bem-vindo</legend>
+    <h1>Olá, Seja bem-vindo à Netflix!</h1> <!-- A saudação será exibida aqui -->
+    <!-- Botão para voltar para o login -->
+    <button onclick="voltarParaLogin()">Voltar para o Login</button>
+  </fieldset>
+
+  <script>
+    // Verificar se o token de autenticação está presente no localStorage
+    let authToken = localStorage.getItem('authToken');
+    let nome = localStorage.getItem('nome');
+    let sobrenome = localStorage.getItem('sobrenome');
+    let isAdmin = localStorage.getItem('isAdmin');
+
+    // Função para redirecionar para o login
+    function voltarParaLogin() {
+      // Limpar o localStorage (opcional, se quiser limpar os dados ao sair)
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('nome');
+      localStorage.removeItem('sobrenome');
+      localStorage.removeItem('isAdmin');
+
+      // Redirecionar para a página de login
+      window.location.href = 'index.html';
+    }
+
+    // Verificar se o usuário está autenticado
+    if (!authToken) {
+      // Se o token de autenticação não estiver presente, redireciona para a página de login
+      window.location.href = 'index.html'; 
+    } else {
+      // Se o usuário for admin, redireciona para a página de administração
+      if (isAdmin === 'true') {
+        window.location.href = 'admin.html';
+      } else {
+        // Se o nome e sobrenome estiverem no localStorage, exibe a saudação
+        if (nome && sobrenome) {
+          document.querySelector('h1').innerHTML = `Olá, ${nome} ${sobrenome}!`;
+        } else {
+          // Caso contrário, redireciona para o login
+          window.location.href = 'index.html'; 
+        }
+      }
+    }
+  </script>
+</body>
+</html>

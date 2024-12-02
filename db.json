@@ -1,0 +1,56 @@
+{
+  "usuarios": [
+    {
+      "nome": "sofia",
+      "sobrenome": "SOSO",
+      "rg": "123456789",
+      "email": "joao@admin.com",
+      "senha": "joao123",
+      "id": "1"
+    },
+    {
+      "id": "2",
+      "nome": "joao",
+      "sobrenome": "victor",
+      "rg": "12349",
+      "email": "jota@vcitor.com",
+      "senha": "123",
+      "isAdmin": true
+    },
+    {
+      "id": "3",
+      "nome": "Sofia",
+      "sobrenome": "SOSO",
+      "rg": "123456789",
+      "email": "soso@admin.com",
+      "senha": "soso123",
+      "isAdmin": false
+    },
+    {
+      "nome": "welton",
+      "sobrenome": "Aparecido",
+      "rg": "4780123",
+      "email": "welton@Aparecido.com",
+      "senha": "666",
+      "id": "4"
+    },
+    {
+      "id": "787a",
+      "nome": "laura",
+      "sobrenome": "Sayuri",
+      "rg": "0987654321",
+      "email": "laura@sayuri.com",
+      "senha": "999",
+      "isAdmin": false
+    },
+    {
+      "id": "504d",
+      "nome": "Lauraaa",
+      "sobrenome": "dgvrf",
+      "rg": "12345678",
+      "email": "drfnfgo@jhnjn",
+      "senha": "123",
+      "isAdmin": false
+    }
+  ]
+}
